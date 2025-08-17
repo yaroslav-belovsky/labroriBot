@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import sys
 
@@ -9,6 +10,8 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 
 from conf import BOT_TOKEN
+from commands import (START_BOT_COMMAND, BOOKS_BOT_COMMAND, BOOKS_BOT_CREATE_COMMAND,
+                      BOOKS_COMMAND, BOOKS_CREATE_COMMAND)
 
 # Bot token can be obtained via https://t.me/BotFather
 TOKEN = BOT_TOKEN
@@ -46,6 +49,14 @@ async def link(message: Message) -> None:
     # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
     await message.answer(f"{html.code(message.from_user.full_name)}, don't you know?! That's Yaroslav Bilovsky!")
 
+def get_books(file_path: str = "data.json", book_id: int | None = None):
+    with open(file_path, "r", encoding="utf-8") as fp:
+        books = json.load(fp)
+        if book_id != None and book_id < len(books):
+            return books[book_id]
+        return books
+
+
 @dp.message()
 async def echo_handler(message: Message) -> None:
     """
@@ -54,6 +65,8 @@ async def echo_handler(message: Message) -> None:
     By default, message handler will handle all message types (like a text, photo, sticker etc.)
     """
     try:
+        books_list = get_books()
+        print(books_list)
         # Send a copy of the received message
         await message.send_copy(chat_id=message.chat.id)
     except TypeError:
@@ -64,6 +77,14 @@ async def echo_handler(message: Message) -> None:
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
+    await  bot.set_my_commands(
+        [
+            START_BOT_COMMAND,
+            BOOKS_BOT_COMMAND,
+            BOOKS_BOT_CREATE_COMMAND
+        ]
+    )
 
     # And the run events dispatching
     await dp.start_polling(bot)
