@@ -117,5 +117,15 @@
             "Меріел Лленд"
         ],
         "poster": "https://static.yakaboo.ua/media/catalog/product/i/m/img857_87.jpg"
+    },
+    {
+        "name": "Енциклопедія про все на світі",
+        "description": "Наша книга стане чудовим помічником батькам \"чомучок\". У ній ви знайдете багато відповідей на дитячі запитання.",
+        "rating": 10.0,
+        "genre": "Енциклопедія",
+        "authors": [
+            "Юлія Карпенко"
+        ],
+        "poster": "https://bookforces.com.ua/cdn/shop/products/AgACAgIAAxkBAAEE1zhl0jsQEapm76XdMA7RO191sz3eAgACU9kxG7CykErt2EiwLkJtQQEAAwIAA3kAAzQE_960x1280.jpg?v=1708288782"
     }
 ]
