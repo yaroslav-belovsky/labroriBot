@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import sys
+import cohere
 
 from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
@@ -79,6 +80,29 @@ async def books(message: Message) -> None:
     markup = books_keyboard_markup(book_list=data)
     await message.answer(f"Список книг. Натисніть назву для деталей",
                             reply_markup=markup)
+
+
+def generate_text(prompt):
+    co = cohere.ClientV2(api_key="IyueYrhWFdmD25nVm495Xc1boJEbiIx4SWEgXveY")
+
+    res =co.chat(
+        model="command-a-03-2025",
+        messages=[
+        {
+        "role": "user",
+        "content": f"{prompt}",
+        }
+        ],
+        )
+    return res.message.content[0].text
+
+
+@dp.message()
+async def echo_handler(messege: Message) -> None:
+    await messege.answer(f"Дякую {messege.from_user.full_name} "
+                         f"Генерую відповідь, зачекайте...")
+    generated_text = generate_text(messege.text)
+    await messege.answer(generated_text)
 
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
@@ -184,3 +208,4 @@ async def book_poster(message: Message, state: FSMContext) -> None:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     asyncio.run(main())
+
